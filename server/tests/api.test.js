@@ -245,6 +245,24 @@ describe('contact form', () => {
   });
 });
 
+describe('resume', () => {
+  test('CV link is served from the API (redirect for local storage, 404 when missing)', async () => {
+    const agent = await login();
+    await agent.patch('/api/admin/singletons/profile').set(XRW).send({ resume: { url: '', fileName: '' } });
+    await agent.post('/api/admin/publish').set(XRW);
+    assert.equal((await request(app).get('/api/public/resume')).status, 404);
+
+    const pdf = Buffer.from(['%PDF-1.4', '1 0 obj<<>>endobj', 'trailer<<>>', '%%EOF'].join(String.fromCharCode(10)));
+    const up = await agent.post('/api/admin/media').set(XRW).field('purpose', 'document').field('folder', 'resume').attach('file', pdf, 'cv.pdf');
+    assert.equal(up.status, 201, JSON.stringify(up.body));
+    await agent.patch('/api/admin/singletons/profile').set(XRW).send({ resume: { url: up.body.item.url, fileName: 'My CV.pdf' } });
+    await agent.post('/api/admin/publish').set(XRW);
+    const res = await request(app).get('/api/public/resume?download=1');
+    assert.equal(res.status, 302);
+    assert.equal(res.headers.location, up.body.item.url);
+  });
+});
+
 describe('seo', () => {
   test('robots.txt and sitemap.xml are generated', async () => {
     const robots = await request(app).get('/robots.txt');

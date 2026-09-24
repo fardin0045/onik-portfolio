@@ -3,7 +3,7 @@ import { Button } from '../components/ui/Button.jsx';
 import { CountUp } from '../components/ui/CountUp.jsx';
 import { SocialLinks } from '../components/ui/SocialIcon.jsx';
 import { TechMarquee } from '../components/ui/TechMarquee.jsx';
-import { mediaUrl } from '../lib/utils.js';
+import { resumeHref } from '../lib/utils.js';
 import { HeroPortrait } from './HeroPortrait.jsx';
 
 /** Staggered entrance helper: each block rises in 90 ms after the previous one. */
@@ -69,7 +69,7 @@ export function Hero({ site }) {
               </Button>
             )}
             {profile.resume?.url && hero.ctaCvLabel && (
-              <Button href={mediaUrl(profile.resume.url)} target="_blank" rel="noopener noreferrer" size="lg" variant="secondary" className="group w-full sm:w-auto">
+              <Button href={resumeHref(profile)} target="_blank" rel="noopener noreferrer" size="lg" variant="secondary" className="group w-full sm:w-auto">
                 <Download className="size-4 transition-transform group-hover:translate-y-0.5" aria-hidden="true" /> {hero.ctaCvLabel}
               </Button>
             )}

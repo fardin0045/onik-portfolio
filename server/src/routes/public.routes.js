@@ -4,9 +4,12 @@ import { optionalAdmin } from '../middleware/auth.js';
 import { contactLimiter } from '../middleware/security.js';
 import { validateBody } from '../middleware/validate.js';
 import { Post, Project } from '../models/content.js';
+import { Media } from '../models/Media.js';
 import { Message } from '../models/Message.js';
 import { hmac } from '../services/auth.service.js';
+import { cache } from '../services/cache.js';
 import { notifyNewMessage } from '../services/mail.service.js';
+import { cloudinaryDriver } from '../services/storage/cloudinary.js';
 import { buildRobots, buildSitemap } from '../services/seo.service.js';
 import { getPublicSite, getSingleton } from '../services/site.service.js';
 import { badRequest, notFound } from '../utils/httpError.js';
@@ -73,6 +76,48 @@ router.get('/posts/:slug', optionalAdmin, async (req, res) => {
   if (!post) throw notFound('Article not found');
   preview ? privateNoStore(res) : noCache(res);
   res.json({ item: clean(post) });
+});
+
+/**
+ * GET /api/public/resume[?download=1]
+ * Serves the published CV from the site's own domain with a friendly file name. Cloudinary files
+ * are fetched through a signed API URL, so this works even when the Cloudinary account blocks
+ * public PDF delivery. Local / external files are simply redirected to.
+ */
+router.get('/resume', async (req, res) => {
+  const profile = await getSingleton('profile');
+  const url = profile.resume?.url;
+  if (!url) throw notFound('No CV uploaded');
+
+  const base = (profile.resume.fileName || `${profile.name || 'CV'}.pdf`).replace(/[^\w.\- ]/g, '').trim() || 'CV.pdf';
+  const fileName = base.toLowerCase().endsWith('.pdf') ? base : `${base}.pdf`;
+  const disposition = req.query.download === '1' ? 'attachment' : 'inline';
+
+  const media = await Media.findOne({ url }).select('provider key resourceType').lean();
+  if (media?.provider === 'cloudinary') {
+    const cacheKey = `resume:${url}`;
+    let pdf = cache.get(cacheKey);
+    if (!pdf) {
+      try {
+        const upstream = await fetch(cloudinaryDriver.signedDownloadUrl(media.key, media.resourceType || 'raw'));
+        if (upstream.ok) pdf = cache.set(cacheKey, Buffer.from(await upstream.arrayBuffer()), 10 * 60 * 1000);
+        else console.warn(`CV download from Cloudinary failed: ${upstream.status}`);
+      } catch (err) {
+        console.warn('CV download from Cloudinary failed:', err.message);
+      }
+    }
+    if (pdf) {
+      res.removeHeader('Content-Security-Policy'); // let the browser's built-in PDF viewer render it
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': String(pdf.length),
+        'Content-Disposition': `${disposition}; filename="${fileName}"`,
+        'Cache-Control': 'public, max-age=300',
+      });
+      return res.send(pdf);
+    }
+  }
+  return res.redirect(302, url);
 });
 
 const contactSchema = z

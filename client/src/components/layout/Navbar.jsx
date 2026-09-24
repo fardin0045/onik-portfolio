@@ -2,7 +2,7 @@ import { Download, Menu, Moon, Sun, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { useTheme } from '../../hooks/useTheme.js';
-import { cn, mediaUrl } from '../../lib/utils.js';
+import { cn, resumeHref } from '../../lib/utils.js';
 import { isBlogVisible, visibleSections } from '../../sections/registry.js';
 import { Button } from '../ui/Button.jsx';
 import { Logo } from './Logo.jsx';
@@ -59,7 +59,7 @@ export function Navbar({ site }) {
   }, [open]);
 
   const settings = site?.settings;
-  const resumeUrl = site?.profile?.resume?.url;
+  const resumeUrl = resumeHref(site?.profile);
   const allowToggle = settings?.theme?.allowToggle !== false;
   const showBlog = isBlogVisible(site);
   const href = (key) => (onHome ? `#${key}` : `/#${key}`);
@@ -113,7 +113,7 @@ export function Navbar({ site }) {
             </button>
           )}
           {resumeUrl && (
-            <Button href={mediaUrl(resumeUrl)} target="_blank" rel="noopener noreferrer" size="sm" variant="secondary" className="hidden h-9 sm:inline-flex">
+            <Button href={resumeUrl} target="_blank" rel="noopener noreferrer" size="sm" variant="secondary" className="hidden h-9 sm:inline-flex">
               <Download className="size-4" aria-hidden="true" /> Resume
             </Button>
           )}
@@ -153,7 +153,7 @@ export function Navbar({ site }) {
             )}
             {resumeUrl && (
               <li className="px-3 pt-2 pb-1">
-                <Button href={mediaUrl(resumeUrl)} target="_blank" rel="noopener noreferrer" className="w-full">
+                <Button href={resumeUrl} target="_blank" rel="noopener noreferrer" className="w-full">
                   <Download className="size-4" aria-hidden="true" /> Download Resume
                 </Button>
               </li>

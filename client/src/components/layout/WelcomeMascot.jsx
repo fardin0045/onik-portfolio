@@ -1,6 +1,6 @@
 import { BellOff, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { cn, mediaUrl } from '../../lib/utils.js';
+import { cn, resumeHref } from '../../lib/utils.js';
 
 /* ───────────── Tuning ───────────── */
 const STORE_KEY = 'mascot-state'; // sessionStorage: { fired: [], muted, recent: [] }
@@ -38,7 +38,7 @@ const pickPosition = (recent = []) => {
 
 /** Message catalogue. Texts come from Website Settings → Welcome assistant. */
 function buildMessages(s = {}, site = {}) {
-  const resume = site.profile?.resume?.url;
+  const resume = resumeHref(site.profile, { download: true });
   const contact = site.profile?.contact || {};
   return {
     welcome: {
@@ -61,7 +61,7 @@ function buildMessages(s = {}, site = {}) {
     cv: resume && {
       title: 'Before you go… 📄',
       text: s.cvMessage,
-      cta: { label: 'Download CV', href: mediaUrl(resume) },
+      cta: { label: 'Download CV', href: resume },
       eyes: 'normal',
     },
     thanks: {

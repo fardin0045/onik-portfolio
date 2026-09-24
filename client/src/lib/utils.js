@@ -10,6 +10,12 @@ export function mediaUrl(url) {
   return url;
 }
 
+/** Link to the published CV served by the API (works with any storage provider, nice file name). */
+export function resumeHref(profile, { download = false } = {}) {
+  if (!profile?.resume?.url) return '';
+  return `${API_URL}/api/public/resume${download ? '?download=1' : ''}`;
+}
+
 const CLOUDINARY_RE = /^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)(.*)$/;
 
 /** Returns an optimised, resized URL (Cloudinary transformations: auto format + quality). */

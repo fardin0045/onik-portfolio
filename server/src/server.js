@@ -3,18 +3,27 @@ import { connectDB, disconnectDB } from './config/db.js';
 import { env } from './config/env.js';
 import { User } from './models/User.js';
 import { ensureAdmin } from './seed/create-admin.js';
-
+import dns from 'node:dns/promises';
+dns.setServers(['1.1.1.1', '8.8.8.8']);
 async function main() {
   await connectDB();
   // First deploy convenience: create the admin from ADMIN_EMAIL / ADMIN_PASSWORD if none exists yet.
-  if (!(await User.exists({ role: 'admin' })) && env.ADMIN_EMAIL && env.ADMIN_PASSWORD) {
+  if (
+    !(await User.exists({ role: 'admin' })) &&
+    env.ADMIN_EMAIL &&
+    env.ADMIN_PASSWORD
+  ) {
     await ensureAdmin({ quiet: true });
   } else if (!(await User.exists({ role: 'admin' }))) {
-    console.warn('⚠️  No admin account yet. Set ADMIN_EMAIL and ADMIN_PASSWORD, then run `npm run seed` or restart.');
+    console.warn(
+      '⚠️  No admin account yet. Set ADMIN_EMAIL and ADMIN_PASSWORD, then run `npm run seed` or restart.',
+    );
   }
   const app = createApp();
   const server = app.listen(env.PORT, () => {
-    console.log(`🚀 API listening on http://localhost:${env.PORT} (${env.NODE_ENV}, storage: ${env.STORAGE_DRIVER})`);
+    console.log(
+      `🚀 API listening on http://localhost:${env.PORT} (${env.NODE_ENV}, storage: ${env.STORAGE_DRIVER})`,
+    );
   });
 
   const shutdown = async (signal) => {
@@ -27,7 +36,9 @@ async function main() {
   };
   process.on('SIGINT', () => shutdown('SIGINT'));
   process.on('SIGTERM', () => shutdown('SIGTERM'));
-  process.on('unhandledRejection', (err) => console.error('Unhandled rejection:', err));
+  process.on('unhandledRejection', (err) =>
+    console.error('Unhandled rejection:', err),
+  );
 }
 
 main().catch((err) => {

@@ -43,6 +43,14 @@ export const cloudinaryDriver = {
       stream.end(buffer);
     });
   },
+  /**
+   * Authenticated API download URL. Works even when the account restricts public delivery of
+   * PDF/ZIP files (the default on new Cloudinary accounts). Valid for about an hour.
+   */
+  signedDownloadUrl(key, resourceType = 'raw') {
+    ensureConfigured();
+    return cloudinary.utils.private_download_url(key, '', { resource_type: resourceType, type: 'upload' });
+  },
   async remove(key, resourceType = 'image') {
     ensureConfigured();
     await cloudinary.uploader.destroy(key, { resource_type: resourceType, invalidate: true });

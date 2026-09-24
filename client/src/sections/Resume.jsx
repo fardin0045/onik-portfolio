@@ -1,11 +1,12 @@
 import { Download, Eye, FileText } from 'lucide-react';
 import { Button } from '../components/ui/Button.jsx';
 import { Reveal } from '../hooks/useReveal.jsx';
-import { formatDate, mediaUrl } from '../lib/utils.js';
+import { formatDate, resumeHref } from '../lib/utils.js';
 
 export default function Resume({ site, section }) {
   const { resume, name } = site.profile;
-  const url = mediaUrl(resume.url);
+  const url = resumeHref(site.profile);
+  const downloadUrl = resumeHref(site.profile, { download: true });
   return (
     <section id={section.key} aria-labelledby="resume-heading" className="scroll-mt-20 py-16 sm:py-20">
       <div className="container-page">
@@ -33,7 +34,7 @@ export default function Resume({ site, section }) {
               <Button href={url} target="_blank" rel="noopener noreferrer" size="lg" variant="secondary" className="order-2 w-full sm:order-1 sm:w-auto">
                 <Eye className="size-4" aria-hidden="true" /> View online
               </Button>
-              <Button href={url} download={resume.fileName || `${name}-CV.pdf`} size="lg" className="order-1 w-full sm:order-2 sm:w-auto">
+              <Button href={downloadUrl} download={resume.fileName || `${name}-CV.pdf`} size="lg" className="order-1 w-full sm:order-2 sm:w-auto">
                 <Download className="size-4" aria-hidden="true" /> Download CV
               </Button>
             </div>
