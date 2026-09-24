@@ -16,6 +16,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import mongoose from 'mongoose';
+import { ensureSrvResolvable } from '../config/db.js';
 import { env } from '../config/env.js';
 import { storage } from '../services/storage/index.js';
 import { UPLOAD_ROOT } from '../services/storage/local.js';
@@ -36,6 +37,7 @@ if (env.STORAGE_DRIVER !== 'cloudinary' && !process.env.MIGRATE_ALLOW_LOCAL) {
   fail('Set STORAGE_DRIVER=cloudinary (and the CLOUDINARY_* values) so files end up in cloud storage.');
 }
 
+await ensureSrvResolvable(TARGET_URI);
 const source = await mongoose.createConnection(SOURCE_URI).asPromise();
 const target = await mongoose.createConnection(TARGET_URI).asPromise();
 console.log(`• Source: ${source.name} @ ${source.host}`);
