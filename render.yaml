@@ -1,0 +1,50 @@
+# Render Blueprint — API only (the React frontend is deployed on Vercel).
+# Vercel proxies /api, /uploads, /sitemap.xml and /robots.txt to this service (client/vercel.json),
+# so the browser only ever talks to your Vercel domain (first-party cookies, no CORS issues).
+# Step-by-step guide: DEPLOYMENT_GUIDE.md
+services:
+  - type: web
+    name: onik-portfolio-api
+    runtime: node
+    plan: free
+    region: singapore # closest Render region to Bangladesh – put the Atlas cluster in Singapore too
+    rootDir: server
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: SERVE_CLIENT
+        value: "false"
+      # Vercel edge → Render proxy → app: 2 proxies, so req.ip is the real visitor IP (rate limits).
+      - key: TRUST_PROXY
+        value: "2"
+      - key: COOKIE_SAMESITE
+        value: lax
+      - key: STORAGE_DRIVER
+        value: cloudinary
+      - key: CLOUDINARY_FOLDER
+        value: portfolio
+      - key: JWT_SECRET
+        generateValue: true
+      # Set these in the Render dashboard when prompted (never commit them):
+      - key: MONGODB_URI
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: PUBLIC_SITE_URL
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
