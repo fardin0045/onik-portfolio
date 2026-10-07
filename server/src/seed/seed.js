@@ -81,7 +81,7 @@ export async function seed({ withAdmin = true } = {}) {
   }
   if ((await Project.countDocuments()) === 0) {
     console.log('• Projects');
-    for (const [order, { screenshot, ...p }] of [...data.projects, ...data.extraProjects].entries()) {
+    for (const [order, { screenshot, gallery = [], ...p }] of [...data.projects, ...data.extraProjects].entries()) {
       let thumbnail = { url: '', alt: '' };
       try {
         const media = await uploadAsset(`projects/${screenshot}`, { folder: 'projects', alt: `${p.title} screenshot` });
@@ -89,8 +89,18 @@ export async function seed({ withAdmin = true } = {}) {
       } catch (err) {
         console.warn(`   ↳ no screenshot for ${p.title}: ${err.message}`);
       }
+      const images = thumbnail.url ? [thumbnail] : [];
+      for (const [file, alt] of gallery) {
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          const media = await uploadAsset(`projects/${file}`, { folder: 'projects', alt });
+          images.push({ url: media.url, alt });
+        } catch (err) {
+          console.warn(`   ↳ skipped gallery image ${file}: ${err.message}`);
+        }
+      }
       // eslint-disable-next-line no-await-in-loop
-      await Project.create({ ...p, thumbnail, images: thumbnail.url ? [thumbnail] : [], order });
+      await Project.create({ ...p, thumbnail, images, order });
     }
   }
   console.log('✅ Seed complete');

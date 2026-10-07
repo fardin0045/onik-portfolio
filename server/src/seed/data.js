@@ -174,6 +174,39 @@ export const extraProjects = [
     featured: true,
     screenshot: 'nextmeet.png',
   },
+  {
+    title: 'UrbanStep Retail – Multi-Branch Retail Management System',
+    slug: 'urbanstep-retail',
+    shortDescription:
+      'A full-stack retail ERP for a multi-branch fashion chain: POS, branch-wise inventory, stock transfers, purchasing, returns, reports and role-based access.',
+    description: [
+      '- Built a multi-branch retail management system with a POS (split payments, loyalty points, printable invoices), branch-wise inventory and a full stock-movement ledger.',
+      '- Implemented staged stock transfers (request, approve, ship, receive), purchase orders with supplier balances, and customer/supplier returns that restock and refund.',
+      '- Role-based access control for five roles with branch-scoped data, JWT cookie authentication, audit logs and notifications.',
+      '- Dashboards and reports (sales, branch, product, inventory, profit & loss) with CSV export and print; light/dark responsive UI.',
+      '- Backed by 55 automated tests covering workflows, a role-by-endpoint permission matrix, concurrency and security cases.',
+    ].join('\n'),
+    technologies: ['React', 'TypeScript', 'Node.js', 'Express.js', 'MongoDB', 'Mongoose', 'Tailwind CSS', 'TanStack Query', 'Zod', 'JWT'],
+    category: 'Full-Stack ERP / Retail System',
+    githubUrl: '',
+    liveUrl: '',
+    featured: true,
+    screenshot: 'urbanstep-erp.png',
+    // The project is not hosted publicly, so the case study shows the whole product through screenshots.
+    gallery: [
+      ['urbanstep-erp-pos.png', 'Point of sale with cart, split payment and loyalty redemption'],
+      ['urbanstep-erp-invoice.png', 'Printable invoice generated after a sale'],
+      ['urbanstep-erp-inventory.png', 'Branch-wise inventory with low-stock filter'],
+      ['urbanstep-erp-transfers.png', 'Stock transfer workflow: requested, approved, shipped, received, completed'],
+      ['urbanstep-erp-purchases.png', 'Purchase order approval and goods receiving'],
+      ['urbanstep-erp-returns.png', 'Customer return approval and refund'],
+      ['urbanstep-erp-products.png', 'Central product catalogue with photos and live stock'],
+      ['urbanstep-erp-reports.png', 'Sales reports with filters, chart, CSV export and print'],
+      ['urbanstep-erp-profit.png', 'Profit and loss statement'],
+      ['urbanstep-erp-roles.png', 'Role and permission matrix (RBAC)'],
+      ['urbanstep-erp-dark.png', 'Dashboard in dark mode'],
+    ],
+  },
 ];
 
 /**
