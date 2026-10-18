@@ -35,3 +35,34 @@ export default defineConfig(({ mode }) => {
     },
   };
 });
+
+//  rendere 
+// {
+//   "$schema": "https://openapi.vercel.sh/vercel.json",
+//   "rewrites": [
+//     { "source": "/api/:path*", "destination": "https://onik-portfolio-api.onrender.com/api/:path*" },
+//     { "source": "/uploads/:path*", "destination": "https://onik-portfolio-api.onrender.com/uploads/:path*" },
+//     { "source": "/sitemap.xml", "destination": "https://onik-portfolio-api.onrender.com/sitemap.xml" },
+//     { "source": "/robots.txt", "destination": "https://onik-portfolio-api.onrender.com/robots.txt" },
+//     { "source": "/((?!assets/).*)", "destination": "/index.html" }
+//   ],
+//   "headers": [
+//     {
+//       "source": "/assets/(.*)",
+//       "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+//     },
+//     {
+//       "source": "/(.*)",
+//       "headers": [
+//         { "key": "X-Content-Type-Options", "value": "nosniff" },
+//         { "key": "X-Frame-Options", "value": "DENY" },
+//         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+//         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+//         {
+//           "key": "Content-Security-Policy",
+//           "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+//         }
+//       ]
+//     }
+//   ]
+// }
