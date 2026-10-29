@@ -8,7 +8,7 @@ export default function Resume({ site, section }) {
   const url = resumeHref(site.profile);
   const downloadUrl = resumeHref(site.profile, { download: true });
   return (
-    <section id={section.key} aria-labelledby="resume-heading" className="scroll-mt-20 py-16 sm:py-20">
+    <section id={section.key} aria-labelledby="resume-heading" className="scroll-mt-10 py-6 sm:py-8 lg:py-12">
       <div className="container-page">
         <Reveal className="card relative overflow-hidden p-6 sm:p-10">
           <div

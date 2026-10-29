@@ -5,7 +5,7 @@ import { cn } from '../lib/utils.js';
 export function SectionShell({ section, children, className, action, alt = false }) {
   const headingId = `${section.key}-heading`;
   return (
-    <section id={section.key} aria-labelledby={headingId} className={cn('scroll-mt-20 py-16 sm:py-20 lg:py-24', alt && 'bg-surface/40', className)}>
+    <section id={section.key} aria-labelledby={headingId} className={cn('scroll-mt-10 py-6 sm:py-8 lg:py-12', alt && 'bg-surface/40', className)}>
       <div className="container-page">
         <Reveal className="mb-8 flex flex-col gap-4 sm:mb-12 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
