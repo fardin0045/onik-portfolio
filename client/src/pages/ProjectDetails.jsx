@@ -126,7 +126,7 @@ export default function ProjectDetails() {
       <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_300px]">
         <div>
           <h2 className="text-xl font-semibold">About this project</h2>
-          <Markdown className="mt-4">{project.description || project.shortDescription}</Markdown>
+          <Markdown className="mt-4 text-justify">{project.description || project.shortDescription}</Markdown>
         </div>
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           {project.technologies?.length > 0 && (
