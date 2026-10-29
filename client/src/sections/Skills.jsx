@@ -41,9 +41,13 @@ function SkillCard({ category, items, delay, order }) {
   return (
     <Reveal
       delay={delay}
-      // Small screens: follow the admin-defined order (columns are flattened with display: contents).
-      style={{ order }}
-      className="card spotlight group/card grow basis-[18rem] p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-strong lg:basis-auto"
+      style={{
+        // Small screens: follow the admin-defined order (columns are flattened with display: contents).
+        order,
+        // Mobile only (see .reveal-slide): odd cards slide in from the left, even ones from the right.
+        '--slide-x': order % 2 ? '-56px' : '56px',
+      }}
+      className="reveal-slide card spotlight group/card grow basis-[18rem] p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-strong lg:basis-auto"
     >
       <div className="mb-5 flex items-center gap-3">
         <span className="flex size-10 items-center justify-center rounded-xl bg-primary-soft text-primary-ink ring-1 ring-primary/20 transition-transform duration-300 group-hover/card:scale-110 group-hover/card:-rotate-6">
@@ -53,10 +57,11 @@ function SkillCard({ category, items, delay, order }) {
         <span className="ml-auto font-mono text-xs text-subtle">{String(items.length).padStart(2, '0')}</span>
       </div>
       <ul className="flex flex-wrap gap-2" aria-label={`${category} skills`}>
-        {items.map((s) => (
+        {items.map((s, i) => (
           <li
             key={s.id}
-            className="group inline-flex items-center gap-2 rounded-xl border border-border bg-surface-2/70 px-3 py-1.5 text-[0.82rem] font-medium text-fg/90 transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:bg-surface-2 hover:shadow-md"
+            style={{ '--chip-delay': `${delay + 600 + Math.min(i, 12) * 90}ms` }}
+            className="reveal-chip group inline-flex items-center gap-2 rounded-xl border border-border bg-surface-2/70 px-3 py-1.5 text-[0.82rem] font-medium text-fg/90 transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:bg-surface-2 hover:shadow-md"
           >
             <TechIcon name={s.name} className="size-4 transition-transform duration-300 group-hover:scale-110" colored />
             {s.name}
@@ -72,6 +77,7 @@ function SkillCard({ category, items, delay, order }) {
  * Toolkit layout
  *  - Desktop (lg+): balanced card columns either side of a spinning tech orbit.
  *  - Tablet/mobile: the orbit on top, cards in a fluid wrap grid (a lone last card fills its row).
+ *    On scroll the cards slide in alternately from the left and right, then their chips pop in.
  * Column wrappers use `display: contents` below lg so every card joins the same flex-wrap row.
  */
 export default function Skills({ site, section }) {

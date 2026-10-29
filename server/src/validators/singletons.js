@@ -65,6 +65,8 @@ export const profileSchema = z
     avatar: imageDefault(),
     // Optional transparent (background-removed) portrait used by the hero "pop-out" design.
     heroImage: imageDefault(),
+    // Optional second cut-out (e.g. smiling) that cross-fades in when visitors hover the hero portrait.
+    heroImageHover: imageDefault(),
     resume: z
       .object({ url: url().default(''), fileName: text(160).default(''), updatedAt: text(40).default('') })
       .strict()

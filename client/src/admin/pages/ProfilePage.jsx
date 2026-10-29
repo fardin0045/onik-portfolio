@@ -27,6 +27,13 @@ const GROUPS = [
         span: 2,
         help: 'A PNG/WebP of the same photo with a transparent background. It “pops out” of the hero arch. Leave empty to show the regular photo inside the arch.',
       },
+      {
+        name: 'heroImageHover',
+        label: 'Hero hover photo (optional)',
+        type: 'image',
+        span: 2,
+        help: 'A second cut-out with the same framing (e.g. smiling). It fades in when visitors hover the portrait. Leave empty to use the built-in smiling photo.',
+      },
     ],
   },
   {

@@ -18,7 +18,7 @@ export default function About({ site, section }) {
     <SectionShell section={section}>
       <div className="grid gap-10 lg:grid-cols-[1.5fr_1fr] lg:gap-14">
         <Reveal>
-          <Markdown className="max-w-3xl text-base leading-8 sm:text-[1.05rem]">{profile.bio || profile.careerObjective}</Markdown>
+          <Markdown className="max-w-3xl text-justify text-base leading-8 hyphens-auto sm:text-[1.05rem]">{profile.bio || profile.careerObjective}</Markdown>
         </Reveal>
         {facts.length > 0 && (
           <Reveal delay={100}>

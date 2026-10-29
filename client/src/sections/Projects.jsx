@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Reveal } from '../hooks/useReveal.jsx';
 import { cn } from '../lib/utils.js';
 import { ProjectCard } from './ProjectCard.jsx';
@@ -27,6 +27,13 @@ export default function Projects({ site, section }) {
     const useful = [...counts.values()].filter(({ n }) => n >= 2 && n < projects.length).sort((a, b) => b.n - a.n).slice(0, 8);
     return useful.length ? ['All', ...useful.map(({ label }) => label)] : [];
   }, [projects]);
+
+  // The hero's technology badges ask for a filter via a window event ("projects:filter").
+  useEffect(() => {
+    const onFilter = (e) => setFilter(filters.find((f) => norm(f) === norm(e.detail)) || 'All');
+    window.addEventListener('projects:filter', onFilter);
+    return () => window.removeEventListener('projects:filter', onFilter);
+  }, [filters]);
 
   const shown = filter === 'All' ? projects : projects.filter((p) => [p.category, ...(p.technologies || [])].some((t) => t && norm(t) === norm(filter)));
 
