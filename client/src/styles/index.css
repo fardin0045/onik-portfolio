@@ -203,32 +203,32 @@
   transform-origin: 50% 100%;
   transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-.hero-portrait:hover .portrait-cutout {
+[data-smiling] .portrait-cutout {
   transform: scale(1.015); /* horizontal centring uses the separate `translate` property */
 }
 
-/* Hover swap: the second photo (same framing) fades in slowly, and only once it is fully visible does
-   the first one fade out underneath, so the background never shows through mid-fade. On leave the
-   first photo comes back instantly underneath and the second fades away. */
+/* Smile swap (data-smiling is set by HeroPortrait on hover, or on tap on touch screens). The second
+   photo (same framing) fades in on top; once it is fully visible the first fades out underneath, so
+   the backdrop never shows through. A short fade keeps the two expressions from overlapping long. */
 .portrait-hover {
   opacity: 0;
+  will-change: opacity;
   transition:
-    opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .portrait-base {
+  will-change: opacity;
   transition:
-    opacity 0.2s ease,
+    opacity 0.15s ease,
     transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-@media (hover: hover) {
-  .hero-portrait:hover .portrait-hover {
-    opacity: 1;
-  }
-  .hero-portrait:hover .portrait-base {
-    opacity: 0;
-    transition-delay: 0.9s, 0s;
-  }
+[data-smiling] .portrait-hover {
+  opacity: 1;
+}
+[data-smiling] .portrait-base {
+  opacity: 0;
+  transition-delay: 0.55s, 0s;
 }
 
 /* Floating badge */
