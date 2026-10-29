@@ -9,7 +9,7 @@ import { Img } from '../components/ui/Img.jsx';
 import { Markdown } from '../components/ui/Markdown.jsx';
 import { TechIcon } from '../components/ui/TechIcon.jsx';
 import { useDocumentMeta } from '../hooks/useDocumentMeta.js';
-import { useProject } from '../hooks/useSiteData.js';
+import { projectFromSite, useProject } from '../hooks/useSiteData.js';
 import { cn } from '../lib/utils.js';
 import NotFound from './NotFound.jsx';
 
@@ -47,7 +47,9 @@ function Gallery({ project }) {
 export default function ProjectDetails() {
   const { slug } = useParams();
   const site = useSite();
-  const { data, isPending, isError, error, refetch } = useProject(slug);
+  const { data: live, isPending, isError, error, refetch } = useProject(slug, site.projects);
+  // If the API is unreachable, keep showing the copy from the site data instead of an error.
+  const data = live ?? (isError && error?.status !== 404 ? projectFromSite(site.projects, slug) : undefined);
   const project = data?.item;
 
   const siteUrl = (site.settings.seo.siteUrl || window.location.origin).replace(/\/$/, '');
@@ -85,7 +87,7 @@ export default function ProjectDetails() {
       </div>
     );
   }
-  if (isError) return error?.status === 404 ? <NotFound /> : <ErrorState error={error} onRetry={refetch} className="min-h-[60vh]" />;
+  if (!data) return error?.status === 404 ? <NotFound /> : <ErrorState error={error} onRetry={refetch} className="min-h-[60vh]" />;
 
   const { prev, next } = data;
   return (

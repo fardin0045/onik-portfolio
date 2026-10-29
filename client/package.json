@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "snapshot": "node scripts/snapshot-site.mjs",
+    "prebuild": "node scripts/snapshot-site.mjs",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",

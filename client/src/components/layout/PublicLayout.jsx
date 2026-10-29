@@ -64,7 +64,7 @@ function useSpotlight() {
 }
 
 export function PublicLayout() {
-  const { data, isPending, isError, error, refetch } = useSiteData();
+  const { data, isPending, error, refetch } = useSiteData();
   useBranding(data?.settings);
   useSpotlight();
 
@@ -80,7 +80,8 @@ export function PublicLayout() {
       {data?.preview && <PreviewBanner />}
       <Navbar site={data} />
       <main id="main" className="flex-1" tabIndex={-1}>
-        {isPending ? <SiteSkeleton /> : isError ? <ErrorState error={error} onRetry={refetch} className="min-h-[60vh]" /> : <Outlet context={data} />}
+        {/* Keep showing content we already have (snapshot or earlier response) if a background refresh fails. */}
+        {data ? <Outlet context={data} /> : isPending ? <SiteSkeleton /> : <ErrorState error={error} onRetry={refetch} className="min-h-[60vh]" />}
       </main>
       {data && <Footer site={data} />}
       <ScrollToTop />

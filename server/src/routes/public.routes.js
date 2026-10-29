@@ -20,8 +20,17 @@ const router = Router();
 const clean = ({ _id, __v, ...rest }) => ({ id: String(_id), ...rest });
 const wantsPreview = (req) => req.query.preview === '1' && Boolean(req.user);
 
-/** Revalidate on every request; unchanged content is answered with a cheap 304 (ETag). */
-const noCache = (res) => res.set('Cache-Control', 'no-cache');
+/**
+ * Browsers revalidate every time (cheap 304 via ETag), while the CDN in front of the API (Vercel)
+ * may serve a copy for 60 s and keep serving a stale one while it refreshes in the background.
+ * Visitors therefore almost never wait for a cold function start + MongoDB connection.
+ * Admin edits reach the public site within about a minute; drafts (preview) are never cached.
+ */
+const noCache = (res) =>
+  res.set({
+    'Cache-Control': 'no-cache',
+    'Vercel-CDN-Cache-Control': 'max-age=60, stale-while-revalidate=604800',
+  });
 const privateNoStore = (res) => res.set('Cache-Control', 'private, no-store');
 
 router.get('/site', optionalAdmin, async (req, res) => {
